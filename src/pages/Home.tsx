@@ -41,8 +41,8 @@ function DashboardMockup() {
       </div>
       <div className="p-5">
         <div className="flex gap-2 mb-4">
-          {(["Organisation", "Équipe", "Candidat"] as const).map((l, i) => (
-            <span key={i} className={`text-[10px] font-semibold px-2.5 py-1 rounded-full ${i === 0 ? "bg-blue-50 text-blue-600" : i === 1 ? "bg-violet-50 text-violet-600" : "bg-emerald-50 text-emerald-600"}`}>
+          {(["Candidat", "Équipe", "Organisation"] as const).map((l, i) => (
+            <span key={i} className={`text-[10px] font-semibold px-2.5 py-1 rounded-full ${i === 0 ? "bg-emerald-50 text-emerald-600" : i === 1 ? "bg-violet-50 text-violet-600" : "bg-blue-50 text-blue-600"}`}>
               {l}
             </span>
           ))}
@@ -70,43 +70,61 @@ export function Home() {
     <div className="flex flex-col">
 
       {/* Hero */}
-      <section className="relative bg-gradient-to-br from-white via-blue-50/30 to-white py-24 md:py-32 overflow-hidden">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-primary/10 to-blue-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-blue-500/10 to-primary/10 rounded-full blur-3xl" />
-        <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div className="space-y-8">
-              <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-gradient-to-r from-primary/10 to-blue-500/10 border border-primary/20 text-primary rounded-full text-[14px] font-medium shadow-sm">
-                <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+      <section className="bg-white py-16 md:py-24 border-b border-slate-100">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+            {/* Text */}
+            <div className="space-y-6 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-blue-50 border border-blue-100 text-primary rounded-full text-sm font-medium">
+                <div className="w-2 h-2 bg-primary rounded-full" />
                 Plateforme de décision RH
               </div>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-foreground leading-[1.1] tracking-tight">
-                La culture d'équipe,<br />
-                <span className="bg-gradient-to-r from-primary to-blue-700 bg-clip-text text-transparent">une donnée de décision.</span>
-              </h1>
-              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl">
+
+              <div className="space-y-3 max-w-xl mx-auto md:mx-0">
+                <p className="text-base md:text-lg text-muted-foreground font-medium">
+                  Vous ne recrutez pas une personne.
+                </p>
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground leading-tight tracking-tight">
+                  Vous l'intégrez dans un système.
+                </h1>
+                <div className="flex items-center justify-center md:justify-start gap-4 pt-1">
+                  {(["Candidat", "Équipe", "Organisation"] as const).map((label, i) => (
+                    <div key={label} className="flex items-center gap-4">
+                      <span className="text-base md:text-lg font-semibold" style={{ color: i === 0 ? "#059669" : i === 1 ? "#7c3aed" : "#185FA5" }}>
+                        {label}
+                      </span>
+                      {i < 2 && <span className="text-slate-300 font-light text-xl select-none">×</span>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-md mx-auto md:mx-0">
                 Trois niveaux. Une lecture structurée.<br />
                 Des décisions RH fondées sur des données — pas des impressions.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 pt-2">
+
+              <div className="flex flex-col sm:flex-row gap-3 pt-1">
                 <Link to="/contact">
-                  <Button size="lg" className="w-full sm:w-auto rounded-full text-base px-8 shadow-xl shadow-primary/25 hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105">
+                  <Button size="lg" className="w-full sm:w-auto rounded-full text-base px-8 shadow-md hover:shadow-lg transition-shadow">
                     Demander une démo
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
                 </Link>
                 <Link to="/product">
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto rounded-full text-base px-8 border-2 hover:bg-accent/60 hover:border-primary/30 transition-all duration-300">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto rounded-full text-base px-8 border-2 hover:bg-slate-50 transition-colors">
                     Explorer le produit
                   </Button>
                 </Link>
               </div>
             </div>
-            <div className="relative">
+
+            {/* Visual */}
+            <div className="w-full max-w-md mx-auto md:max-w-none">
               <DashboardMockup />
-              <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-gradient-to-tl from-primary/20 to-blue-500/20 rounded-full blur-3xl" />
-              <div className="absolute -top-8 -left-8 w-40 h-40 bg-gradient-to-br from-blue-500/15 to-primary/15 rounded-full blur-3xl" />
             </div>
+
           </div>
         </div>
       </section>
