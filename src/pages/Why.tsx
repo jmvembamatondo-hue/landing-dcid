@@ -241,7 +241,7 @@ export function Why() {
         </div>
       </section>
 
-      {/* Scientific foundation */}
+      {/* Structural approach */}
       <section className="py-24 bg-gradient-to-br from-blue-50/40 via-white to-blue-50/40">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
@@ -250,26 +250,16 @@ export function Why() {
                 <Brain className="w-10 h-10 text-white" />
               </div>
               <h2 className="text-4xl font-bold text-foreground mb-6">
-                Une base scientifique solide
+                Une lecture structurée des dynamiques de travail
               </h2>
-              <p className="text-lg md:text-xl text-muted-foreground mb-10 leading-relaxed">
-                Notre méthodologie s'appuie sur des décennies de recherche en psychologie organisationnelle, 
-                sociologie du travail et sciences de gestion.
+              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+                DCID-RH s'appuie sur l'observation des interactions entre organisation, équipes et collaborateurs.
               </p>
-              <div className="grid md:grid-cols-3 gap-8 mt-10">
-                <div className="p-6 bg-gradient-to-br from-blue-50 to-white rounded-2xl border border-border/40">
-                  <div className="text-5xl font-bold bg-gradient-to-r from-primary to-blue-700 bg-clip-text text-transparent mb-2">15+</div>
-                  <div className="text-sm text-muted-foreground font-medium">Années de recherche</div>
-                </div>
-                <div className="p-6 bg-gradient-to-br from-blue-50 to-white rounded-2xl border border-border/40">
-                  <div className="text-5xl font-bold bg-gradient-to-r from-primary to-blue-700 bg-clip-text text-transparent mb-2">50+</div>
-                  <div className="text-sm text-muted-foreground font-medium">Études validées</div>
-                </div>
-                <div className="p-6 bg-gradient-to-br from-blue-50 to-white rounded-2xl border border-border/40">
-                  <div className="text-5xl font-bold bg-gradient-to-r from-primary to-blue-700 bg-clip-text text-transparent mb-2">98%</div>
-                  <div className="text-sm text-muted-foreground font-medium">Fiabilité prédictive</div>
-                </div>
-              </div>
+              <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto mt-4">
+                L'objectif n'est pas de produire des scores abstraits,
+                mais de rendre visibles les écarts d'alignement
+                et d'aider à prendre des décisions adaptées.
+              </p>
             </div>
           </div>
         </div>
