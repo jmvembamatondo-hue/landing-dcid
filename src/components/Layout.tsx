@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router";
 import { clsx } from "clsx";
 import { Button } from "./ui/button";
@@ -8,10 +9,23 @@ const navLinks = [
   { to: "/use-cases", label: "Cas d'usage" },
   { to: "/why", label: "Pourquoi DCID-RH" },
   { to: "/about", label: "À propos" },
+  { to: "/contact", label: "Contact" },
 ];
 
 function Navbar() {
   const { pathname } = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Close menu on route change
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  // Prevent body scroll when menu is open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
@@ -21,7 +35,7 @@ function Navbar() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
-          {navLinks.map(({ to, label }) => (
+          {navLinks.slice(0, 5).map(({ to, label }) => (
             <Link
               key={to}
               to={to}
@@ -35,11 +49,76 @@ function Navbar() {
           ))}
         </nav>
 
-        <Link to="/contact">
-          <Button size="sm" className="rounded-full">
-            Demander une démo
-          </Button>
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link to="/contact" className="hidden md:block">
+            <Button size="sm" className="rounded-full">
+              Demander une démo
+            </Button>
+          </Link>
+
+          {/* Hamburger button — mobile only */}
+          <button
+            className="md:hidden flex flex-col justify-center items-center w-9 h-9 gap-1.5 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            aria-label="Ouvrir le menu"
+            onClick={() => setMenuOpen(true)}
+          >
+            <span className="block w-5 h-0.5 bg-foreground rounded" />
+            <span className="block w-5 h-0.5 bg-foreground rounded" />
+            <span className="block w-5 h-0.5 bg-foreground rounded" />
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile full-screen overlay */}
+      <div
+        className={clsx(
+          "fixed inset-0 z-50 flex flex-col bg-white transition-all duration-300 ease-in-out md:hidden",
+          menuOpen
+            ? "opacity-100 translate-x-0 pointer-events-auto"
+            : "opacity-0 translate-x-full pointer-events-none"
+        )}
+      >
+        {/* Overlay header */}
+        <div className="flex items-center justify-between px-6 h-16 border-b border-border/40">
+          <Link to="/" className="font-bold text-xl text-primary" onClick={() => setMenuOpen(false)}>
+            DCID-RH
+          </Link>
+          <button
+            className="flex items-center justify-center w-9 h-9 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            aria-label="Fermer le menu"
+            onClick={() => setMenuOpen(false)}
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <line x1="4" y1="4" x2="16" y2="16" />
+              <line x1="16" y1="4" x2="4" y2="16" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Nav links */}
+        <nav className="flex flex-col px-6 py-8 gap-2 flex-1">
+          {navLinks.map(({ to, label }) => (
+            <Link
+              key={to}
+              to={to}
+              className={clsx(
+                "text-lg font-medium py-3 border-b border-border/30 transition-colors hover:text-primary",
+                pathname === to ? "text-primary" : "text-foreground"
+              )}
+              onClick={() => setMenuOpen(false)}
+            >
+              {label}
+            </Link>
+          ))}
+
+          <div className="mt-6">
+            <Link to="/contact" onClick={() => setMenuOpen(false)}>
+              <Button size="sm" className="rounded-full w-full" style={{ backgroundColor: "#185FA5" }}>
+                Demander une démo
+              </Button>
+            </Link>
+          </div>
+        </nav>
       </div>
     </header>
   );
