@@ -15,6 +15,9 @@ const navLinks = [
 function Navbar() {
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const scrollYRef = { current: 0 };
+
+  const close = () => setMenuOpen(false);
 
   useEffect(() => {
     setMenuOpen(false);
@@ -22,21 +25,35 @@ function Navbar() {
 
   useEffect(() => {
     if (menuOpen) {
-      document.documentElement.style.overflow = "hidden";
+      // iOS-safe scroll lock: freeze body at current scroll position
+      scrollYRef.current = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollYRef.current}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
       document.body.style.overflow = "hidden";
     } else {
-      document.documentElement.style.overflow = "";
+      // Restore scroll position on close
+      const savedY = scrollYRef.current;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
       document.body.style.overflow = "";
+      window.scrollTo(0, savedY);
     }
     return () => {
-      document.documentElement.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
       document.body.style.overflow = "";
     };
   }, [menuOpen]);
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-white">
+      <header style={{ position: "sticky", top: 0, zIndex: 40, width: "100%", backgroundColor: "#ffffff", borderBottom: "1px solid #e5e7eb" }}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2 font-bold text-xl" style={{ color: "#185FA5" }}>
             DCID-RH
@@ -66,129 +83,137 @@ function Navbar() {
 
             {/* Hamburger — mobile only */}
             <button
-              className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-[5px]"
+              className="md:hidden"
               aria-label="Ouvrir le menu"
               onClick={() => setMenuOpen(true)}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "5px",
+                width: "40px",
+                height: "40px",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+              }}
             >
-              <span className="block w-6 h-[2px] bg-gray-800" />
-              <span className="block w-6 h-[2px] bg-gray-800" />
-              <span className="block w-6 h-[2px] bg-gray-800" />
+              <span style={{ display: "block", width: "24px", height: "2px", backgroundColor: "#111827", borderRadius: "2px" }} />
+              <span style={{ display: "block", width: "24px", height: "2px", backgroundColor: "#111827", borderRadius: "2px" }} />
+              <span style={{ display: "block", width: "24px", height: "2px", backgroundColor: "#111827", borderRadius: "2px" }} />
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile overlay — OUTSIDE header to avoid stacking context issues */}
-      <div
-        aria-hidden={!menuOpen}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100vh",
-          backgroundColor: "#ffffff",
-          zIndex: 9999,
-          display: "flex",
-          flexDirection: "column",
-          transition: "transform 0.25s ease, opacity 0.25s ease",
-          transform: menuOpen ? "translateX(0)" : "translateX(100%)",
-          opacity: menuOpen ? 1 : 0,
-          pointerEvents: menuOpen ? "auto" : "none",
-        }}
-        className="md:hidden"
-      >
-        {/* Overlay top bar */}
+      {/* Mobile fullscreen overlay — rendered as sibling to avoid stacking context from header */}
+      {menuOpen && (
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu de navigation"
           style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "#ffffff",
+            zIndex: 9999,
+            display: "flex",
+            flexDirection: "column",
+            overscrollBehavior: "contain",
+          }}
+        >
+          {/* Top bar */}
+          <div style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             padding: "0 24px",
             height: "64px",
             borderBottom: "1px solid #e5e7eb",
-            backgroundColor: "#ffffff",
-          }}
-        >
-          <Link
-            to="/"
-            style={{ fontWeight: 700, fontSize: "1.25rem", color: "#185FA5", textDecoration: "none" }}
-            onClick={() => setMenuOpen(false)}
-          >
-            DCID-RH
-          </Link>
-          <button
-            aria-label="Fermer le menu"
-            onClick={() => setMenuOpen(false)}
-            style={{
-              width: "40px",
-              height: "40px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#111827" strokeWidth="2.5" strokeLinecap="round">
-              <line x1="4" y1="4" x2="18" y2="18" />
-              <line x1="18" y1="4" x2="4" y2="18" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Nav links */}
-        <nav
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            padding: "32px 24px",
-            gap: 0,
-            flex: 1,
-            backgroundColor: "#ffffff",
-          }}
-        >
-          {navLinks.map(({ to, label }) => (
+            flexShrink: 0,
+          }}>
             <Link
-              key={to}
-              to={to}
-              onClick={() => setMenuOpen(false)}
+              to="/"
+              style={{ fontWeight: 700, fontSize: "1.25rem", color: "#185FA5", textDecoration: "none" }}
+              onClick={close}
+            >
+              DCID-RH
+            </Link>
+            <button
+              aria-label="Fermer le menu"
+              onClick={close}
               style={{
-                fontSize: "1.125rem",
-                fontWeight: 500,
-                color: pathname === to ? "#185FA5" : "#111827",
-                textDecoration: "none",
-                padding: "16px 0",
-                borderBottom: "1px solid #f3f4f6",
-                display: "block",
+                width: "40px",
+                height: "40px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
               }}
             >
-              {label}
-            </Link>
-          ))}
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#111827" strokeWidth="2.5" strokeLinecap="round">
+                <line x1="4" y1="4" x2="18" y2="18" />
+                <line x1="18" y1="4" x2="4" y2="18" />
+              </svg>
+            </button>
+          </div>
 
-          <div style={{ marginTop: "32px" }}>
-            <Link to="/contact" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none" }}>
-              <button
+          {/* Links */}
+          <nav style={{
+            display: "flex",
+            flexDirection: "column",
+            padding: "24px 24px",
+            overflowY: "auto",
+            flex: 1,
+          }}>
+            {navLinks.map(({ to, label }) => (
+              <Link
+                key={to}
+                to={to}
+                onClick={close}
                 style={{
+                  fontSize: "1.125rem",
+                  fontWeight: 500,
+                  color: pathname === to ? "#185FA5" : "#111827",
+                  textDecoration: "none",
+                  padding: "18px 0",
+                  borderBottom: "1px solid #f3f4f6",
+                  display: "block",
+                  lineHeight: 1.4,
+                }}
+              >
+                {label}
+              </Link>
+            ))}
+
+            <div style={{ marginTop: "32px" }}>
+              <Link to="/contact" onClick={close} style={{ textDecoration: "none" }}>
+                <button style={{
                   width: "100%",
                   padding: "14px 24px",
                   backgroundColor: "#185FA5",
                   color: "#ffffff",
                   fontWeight: 600,
-                  fontSize: "0.9rem",
+                  fontSize: "0.95rem",
                   borderRadius: "9999px",
                   border: "none",
                   cursor: "pointer",
-                }}
-              >
-                Demander une démo
-              </button>
-            </Link>
-          </div>
-        </nav>
-      </div>
+                }}>
+                  Demander une démo
+                </button>
+              </Link>
+            </div>
+          </nav>
+        </div>
+      )}
     </>
   );
 }
