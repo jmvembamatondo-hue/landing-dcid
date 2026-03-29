@@ -16,111 +16,180 @@ function Navbar() {
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Close menu on route change
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
 
-  // Prevent body scroll when menu is open
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    if (menuOpen) {
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+    } else {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    };
   }, [menuOpen]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 font-bold text-xl text-primary">
-          DCID-RH
-        </Link>
-
-        <nav className="hidden md:flex items-center gap-6">
-          {navLinks.slice(0, 5).map(({ to, label }) => (
-            <Link
-              key={to}
-              to={to}
-              className={clsx(
-                "text-sm font-medium transition-colors hover:text-primary",
-                pathname === to ? "text-primary" : "text-muted-foreground"
-              )}
-            >
-              {label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-3">
-          <Link to="/contact" className="hidden md:block">
-            <Button size="sm" className="rounded-full">
-              Demander une démo
-            </Button>
+    <>
+      <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
+          <Link to="/" className="flex items-center gap-2 font-bold text-xl" style={{ color: "#185FA5" }}>
+            DCID-RH
           </Link>
 
-          {/* Hamburger button — mobile only */}
-          <button
-            className="md:hidden flex flex-col justify-center items-center w-9 h-9 gap-1.5 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            aria-label="Ouvrir le menu"
-            onClick={() => setMenuOpen(true)}
-          >
-            <span className="block w-5 h-0.5 bg-foreground rounded" />
-            <span className="block w-5 h-0.5 bg-foreground rounded" />
-            <span className="block w-5 h-0.5 bg-foreground rounded" />
-          </button>
-        </div>
-      </div>
+          <nav className="hidden md:flex items-center gap-6">
+            {navLinks.slice(0, 5).map(({ to, label }) => (
+              <Link
+                key={to}
+                to={to}
+                className={clsx(
+                  "text-sm font-medium transition-colors hover:text-primary",
+                  pathname === to ? "text-primary" : "text-muted-foreground"
+                )}
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
 
-      {/* Mobile full-screen overlay */}
+          <div className="flex items-center gap-3">
+            <Link to="/contact" className="hidden md:block">
+              <Button size="sm" className="rounded-full">
+                Demander une démo
+              </Button>
+            </Link>
+
+            {/* Hamburger — mobile only */}
+            <button
+              className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-[5px]"
+              aria-label="Ouvrir le menu"
+              onClick={() => setMenuOpen(true)}
+            >
+              <span className="block w-6 h-[2px] bg-gray-800" />
+              <span className="block w-6 h-[2px] bg-gray-800" />
+              <span className="block w-6 h-[2px] bg-gray-800" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile overlay — OUTSIDE header to avoid stacking context issues */}
       <div
-        className={clsx(
-          "fixed inset-0 z-50 flex flex-col bg-white transition-all duration-300 ease-in-out md:hidden",
-          menuOpen
-            ? "opacity-100 translate-x-0 pointer-events-auto"
-            : "opacity-0 translate-x-full pointer-events-none"
-        )}
+        aria-hidden={!menuOpen}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100vh",
+          backgroundColor: "#ffffff",
+          zIndex: 9999,
+          display: "flex",
+          flexDirection: "column",
+          transition: "transform 0.25s ease, opacity 0.25s ease",
+          transform: menuOpen ? "translateX(0)" : "translateX(100%)",
+          opacity: menuOpen ? 1 : 0,
+          pointerEvents: menuOpen ? "auto" : "none",
+        }}
+        className="md:hidden"
       >
-        {/* Overlay header */}
-        <div className="flex items-center justify-between px-6 h-16 border-b border-border/40">
-          <Link to="/" className="font-bold text-xl text-primary" onClick={() => setMenuOpen(false)}>
+        {/* Overlay top bar */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "0 24px",
+            height: "64px",
+            borderBottom: "1px solid #e5e7eb",
+            backgroundColor: "#ffffff",
+          }}
+        >
+          <Link
+            to="/"
+            style={{ fontWeight: 700, fontSize: "1.25rem", color: "#185FA5", textDecoration: "none" }}
+            onClick={() => setMenuOpen(false)}
+          >
             DCID-RH
           </Link>
           <button
-            className="flex items-center justify-center w-9 h-9 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             aria-label="Fermer le menu"
             onClick={() => setMenuOpen(false)}
+            style={{
+              width: "40px",
+              height: "40px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+            }}
           >
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <line x1="4" y1="4" x2="16" y2="16" />
-              <line x1="16" y1="4" x2="4" y2="16" />
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#111827" strokeWidth="2.5" strokeLinecap="round">
+              <line x1="4" y1="4" x2="18" y2="18" />
+              <line x1="18" y1="4" x2="4" y2="18" />
             </svg>
           </button>
         </div>
 
         {/* Nav links */}
-        <nav className="flex flex-col px-6 py-8 gap-2 flex-1">
+        <nav
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            padding: "32px 24px",
+            gap: 0,
+            flex: 1,
+            backgroundColor: "#ffffff",
+          }}
+        >
           {navLinks.map(({ to, label }) => (
             <Link
               key={to}
               to={to}
-              className={clsx(
-                "text-lg font-medium py-3 border-b border-border/30 transition-colors hover:text-primary",
-                pathname === to ? "text-primary" : "text-foreground"
-              )}
               onClick={() => setMenuOpen(false)}
+              style={{
+                fontSize: "1.125rem",
+                fontWeight: 500,
+                color: pathname === to ? "#185FA5" : "#111827",
+                textDecoration: "none",
+                padding: "16px 0",
+                borderBottom: "1px solid #f3f4f6",
+                display: "block",
+              }}
             >
               {label}
             </Link>
           ))}
 
-          <div className="mt-6">
-            <Link to="/contact" onClick={() => setMenuOpen(false)}>
-              <Button size="sm" className="rounded-full w-full" style={{ backgroundColor: "#185FA5" }}>
+          <div style={{ marginTop: "32px" }}>
+            <Link to="/contact" onClick={() => setMenuOpen(false)} style={{ textDecoration: "none" }}>
+              <button
+                style={{
+                  width: "100%",
+                  padding: "14px 24px",
+                  backgroundColor: "#185FA5",
+                  color: "#ffffff",
+                  fontWeight: 600,
+                  fontSize: "0.9rem",
+                  borderRadius: "9999px",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
                 Demander une démo
-              </Button>
+              </button>
             </Link>
           </div>
         </nav>
       </div>
-    </header>
+    </>
   );
 }
 
