@@ -14,10 +14,10 @@ export function Why() {
             <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-gradient-to-r from-primary/10 to-blue-500/10 border border-primary/20 text-primary rounded-full text-[14px] font-medium shadow-sm">
               Une approche révolutionnaire
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold text-foreground tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground tracking-tight">
               Pourquoi choisir DCID-RH ?
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed">
+            <p className="text-base md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
               Au-delà des tests de personnalité : une analyse systémique de la compatibilité culturelle
             </p>
           </div>
@@ -28,16 +28,16 @@ export function Why() {
       <section className="py-24 bg-gradient-to-b from-white to-slate-50/50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-5xl mx-auto">
-            <div className="bg-gradient-to-br from-blue-50 via-white to-blue-50/50 rounded-3xl p-10 md:p-14 border-2 border-primary/20 shadow-xl">
-              <div className="flex items-start gap-4 mb-8">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-700 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-xl shadow-primary/30">
-                  <Brain className="w-8 h-8 text-white" />
+            <div className="bg-gradient-to-br from-blue-50 via-white to-blue-50/50 rounded-3xl p-6 sm:p-10 md:p-14 border-2 border-primary/20 shadow-xl">
+              <div className="flex flex-col sm:flex-row sm:items-start gap-4 mb-8">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-primary to-blue-700 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-xl shadow-primary/30">
+                  <Brain className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-4xl font-bold text-foreground mb-4">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3">
                     Ce n'est PAS un test de personnalité
                   </h2>
-                  <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+                  <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
                     DCID-RH ne mesure pas qui vous êtes, mais comment vous vous alignez avec une culture spécifique
                   </p>
                 </div>
